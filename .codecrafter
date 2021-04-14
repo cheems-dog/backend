@@ -1,0 +1,5 @@
+# CodeCrafter v1.0 Config File
+
+lang=node-ts
+testing=none
+template=blank
