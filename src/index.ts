@@ -2,8 +2,6 @@ import * as express from 'express';
 import * as chalk from 'chalk';
 import * as logSymbols from 'log-symbols';
 import * as path from 'path';
-import * as fileUpload from 'express-fileupload';
-import * as bodyParser from 'body-parser';
 import * as formData from 'express-form-data';
 import * as os from 'os';
 import * as functions from './functions';
