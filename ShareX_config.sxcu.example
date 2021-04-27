@@ -1,0 +1,16 @@
+﻿{
+  "Version": "13.4.0",
+  "Name": "cheems.dog - localhost",
+  "DestinationType": "ImageUploader",
+  "RequestMethod": "POST",
+  "RequestURL": "http://localhost:8081/api/upload",
+  "Body": "MultipartFormData",
+  "Arguments": {
+    "key": "hello"
+  },
+  "FileFormName": "file",
+  "URL": "$json:data.url$",
+  "ThumbnailURL": "$json:data.thumbnail$",
+  "DeletionURL": "$json:data.delete$",
+  "ErrorMessage": "$json:data.error$"
+}
