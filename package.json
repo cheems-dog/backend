@@ -5,18 +5,24 @@
     "main": "src/index.js",
     "scripts": {
         "dev": "nodemon",
-        "prod": "ts-node src/index.ts"
+        "prod": "ts-node src/index.ts",
+        "audit": "npm audit"
     },
     "dependencies": {
         "body-parser": "^1.19.0",
         "chalk": "^4.1.0",
+        "comment-json": "^4.1.0",
         "ejs": "^3.1.6",
         "express": "^4.17.1",
         "express-fileupload": "^1.2.1",
-        "log-symbols": "^4.1.0"
+        "express-form-data": "^2.0.16",
+        "log-symbols": "^4.1.0",
+        "multer": "^1.4.2"
     },
     "devDependencies": {
+        "@types/comment-json": "^2.4.2",
         "@types/express": "^4.17.11",
-        "@types/express-fileupload": "^1.1.6"
+        "@types/express-fileupload": "^1.1.6",
+        "@types/express-form-data": "^2.0.1"
     }
 }

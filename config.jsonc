@@ -1,0 +1,7 @@
+{
+    // Port server will be running at
+    "port": 8081,
+    
+    // Name of the host you are running the script on, you can set it to domain or IP address
+    "hostname": "localhost:8081"
+}

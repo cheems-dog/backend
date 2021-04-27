@@ -1,4 +1,8 @@
+# Project-specific
+src/storage/*
+
 # Node
 node_modules/
+package-lock.json
 
 # CodeCrafter
