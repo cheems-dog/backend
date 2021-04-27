@@ -21,8 +21,8 @@ cheems.dog is fast and innovative image & file hosting. Currently supporting onl
 
 ## Credits
 cheems.dog could not ever start with the help of this people:
-- 6vz - Idea for a project, frontend, graphics | [Discord](discord.com/users/338075554937044994) [Twitter](https://twitter.com/6vzSaysStuff) [GitHub](https://github.com/6vz)
-- JuzioMiecio520 - Head developer, backend | [Discord](discord.com/users/396286593033437185) [Twitter](https://twitter.com/JuzioMiecio520) [GitHub](https://github.com/JuzioMiecio520)
+- 6vz - Idea for a project, frontend, graphics | [Discord](https://discord.com/users/338075554937044994) [Twitter](https://twitter.com/6vzSaysStuff) [GitHub](https://github.com/6vz)
+- JuzioMiecio520 - Head developer, backend | [Discord](https://discord.com/users/396286593033437185) [Twitter](https://twitter.com/JuzioMiecio520) [GitHub](https://github.com/JuzioMiecio520)
 
 ## Contributing
 To contribute clone this repo to your local system, mnake changes and create a pull request. Pull request should be reviewed and accepted quickly
