@@ -1,0 +1,224 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap');
+body {
+  color: white!important;
+  background-color: #0e1418!important;
+  font-family: Manrope, sans-serif!important;
+  font-size: 1.10rem;
+  font-weight: 500;
+}
+.vl {
+  border-left: 3px solid #3B78FF;
+  opacity: 50%;
+  height: 1.8rem;
+  padding-left: 1rem;
+  transition: opacity 0.25s;
+}
+
+.vl:hover {
+  opacity: 100%;
+}
+.navbar-dark {
+  background-color: #14191C!important;
+}
+.bg-dark {
+  background-color: #14191C!important;
+}
+.card {
+  border-left: solid 4px #3B78FF;
+}
+.btn-secondary {
+  background-color: #1d2429!important;
+  border-color: #1d2429!important;
+}
+hr {
+  border-top: 5px solid #14191C;
+  border-radius: 5px;
+}
+#container {
+  perspective: 25px;
+}
+#inner {
+  transition: transform 0.5s;
+  width: auto;
+  height: auto;
+}
+.btn-custom {
+  background-color: #14191C;
+  padding: 10px 22px;
+  color: white;
+  font-weight: bold;
+  border-radius: 2px;
+}
+.btn-custom:hover {
+  background-color: #192024;
+  color: white;
+  font-weight: bold;
+  border-radius: 2px;
+}
+.text-xs {
+  font-size: .8rem;
+}
+.text-sm {
+  font-size: 1rem;
+}
+.text-lg {
+  font-size: 1.8rem;
+}
+.text-xl {
+  font-size: 2.5rem;
+}
+.text-2xl {
+  font-size: 2.8rem;
+}
+.text-3xl {
+  font-size: 3rem;
+}
+.text-4xl {
+  font-size: 3.8rem;
+}
+.text-5xl {
+  font-size: 4rem;
+}
+.navbar-nav {
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+.feature-card {
+  transform: scale(1);
+  transition: transform 0.15s;
+}
+.feature-card:hover {
+  transform: scale(1.20);
+  transition: transform 0.15s;
+}
+
+/* Modal Header */
+.cmodal-header {
+  padding: 1rem;
+  background-color: #13181B;
+  color: white;
+}
+
+/* Modal Body */
+.cmodal-body {padding: 1rem;}
+
+/* Modal Footer */
+.cmodal-footer {
+  padding: 1rem;
+  background-color: #13181B;
+  color: white;
+}
+
+/* The Modal (background) */
+.cmodal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.cmodal-content {
+  position: relative;
+  background-color: #14191C;
+  margin: auto;
+  padding: 0;
+  width: 50%;
+  animation-name: animatetop;
+  animation-duration: 0.4s
+  border-radius: 5px;
+}
+
+/* The Close Button */
+.cclose {
+  color: #7f8d94;
+  float: right;
+  transform: scale(2);
+  font-weight: bold;
+}
+
+.cclose:hover {
+  cursor: pointer;
+}
+
+/* Add Animation */
+@keyframes animatetop {
+  from {top: -300px; opacity: 0}
+  to {top: 0; opacity: 1}
+}
+
+.centered {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.card-custom {
+  background-color: rgba(255, 255, 255, .05);
+  border-radius: 5px;
+}
+footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  padding: 1.25rem;
+  background-color: #14191C;
+
+/*
+ * Animation module with all animation code
+ */
+.anim-text-flow,
+.anim-text-flow-hover:hover {
+  /*
+   * Animation variables
+   */
+  $animationSteps: 20;
+  $animationDuration: 50;
+  $animationElement: span;
+  $animationElementsCount: 100;
+  $delayBetweenLetters: 0.2;
+
+  /*
+   * Elements settings
+   */
+  #{$animationElement} {
+    animation-name: anim-text-flow-keys;
+    animation-duration: #{$animationDuration}s;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+    animation-fill-mode: forwards;
+  }
+
+  /*
+   * Keyframe loop
+   */
+  @keyframes anim-text-flow-keys {
+    @for $i from 0 through $animationSteps {
+      #{percentage($i * (1 / $animationSteps))} {
+        color: hsla(random(365), 60, 60, 1);
+      }
+    }
+  }
+
+  /*
+   * Element animation delay loop
+   */
+  $totalDelayTime: $animationElementsCount * $delayBetweenLetters;
+
+  @for $i from 1 through $animationElementsCount {
+    #{$animationElement}:nth-of-type(#{$i}) {
+      animation-delay: #{($i * $delayBetweenLetters) - $totalDelayTime}s;
+    }
+  }
+}
+GET | 200 (cache) | 2 ms | cloudflare

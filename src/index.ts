@@ -12,6 +12,7 @@ const config = functions.config();
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
+app.use('/static', express.static(path.join(__dirname, 'static')));
 app.use('/static/storage', express.static(path.join(__dirname, 'storage')));
 app.use(formData.parse({
     uploadDir: os.tmpdir(),
@@ -23,6 +24,10 @@ app.get('/', (req: express.Request, res: express.Response) => {
 });
 
 app.use('/', routes);
+
+// app.use((req: express.Request, res: express.Response) => {
+//     res.status(404).send('Not found')
+// });
 
 app.listen(8081, () => {
     console.log(`${chalk.white.bgGreen(logSymbols.success)} Server started on port ${chalk.cyan('8081')}`);
