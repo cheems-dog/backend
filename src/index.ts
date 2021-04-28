@@ -7,7 +7,6 @@ import * as os from 'os';
 import * as mongoose from 'mongoose';
 import * as bodyParser from 'body-parser';
 import * as functions from './functions';
-import ImageModel from './models/image';
 import routes from './routes';
 
 const app = express();

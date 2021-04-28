@@ -1,11 +1,11 @@
 import * as mongoose from 'mongoose';
 
-interface Image {
+export interface Image {
     name: string;
     author: string;
 }
 
-const ImageSchema = new mongoose.Schema(
+export const ImageSchema = new mongoose.Schema(
     {
         name: String,
         author: String
@@ -15,6 +15,4 @@ const ImageSchema = new mongoose.Schema(
     }
 );
 
-const ImageModel = mongoose.model<Image & mongoose.Document>('Image', ImageSchema);
-
-export default ImageModel;
+export const ImageModel = mongoose.model<Image & mongoose.Document>('Image', ImageSchema);

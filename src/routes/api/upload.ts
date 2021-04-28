@@ -2,6 +2,8 @@ import * as express from 'express';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as functions from '../../functions';
+import { UserModel } from '../../models/user';
+import { ImageModel } from '../../models/image';
 
 const config = functions.config();
 
@@ -36,7 +38,7 @@ const createId = (length = 6) => {
     ];
     let string = '';
 
-    for(let i = 0; i < length; i++) string += characters[Math.floor(Math.random() * characters.length)];
+    for (let i = 0; i < length; i++) string += characters[Math.floor(Math.random() * characters.length)];
 
     return string;
 }
@@ -47,7 +49,7 @@ const createFileName = (file: File) => {
 
 const router = express.Router();
 
-router.post('/', (req: express.Request, res: express.Response) => {
+router.post('/', async (req: express.Request, res: express.Response) => {
     const file = (req.files.file as any) as File;
 
     console.log(file);
@@ -58,6 +60,18 @@ router.post('/', (req: express.Request, res: express.Response) => {
             data: {
                 message: 'You didn\'t provided token for authentication',
                 fix: 'Provide your private token or obtain it at https://discord.gg/3WrP5BUfcw'
+            }
+        });
+    }
+
+    const user = await UserModel.findOne({ token: req.body.key }).exec();
+
+    if (user === null) {
+        return res.status(403).json({
+            success: false,
+            data: {
+                message: 'Invalid token',
+                fix: 'This token does not have permissions to use this endpoint. You entered the wrong token, or you have been permanently banned from using our service'
             }
         });
     }
@@ -96,6 +110,13 @@ router.post('/', (req: express.Request, res: express.Response) => {
         const filename = createFileName(file);
 
         fs.copyFileSync(file.path, path.join(__dirname, '../../storage', filename));
+
+        await ImageModel.create({
+            name: filename,
+            author: user._id
+        });
+        await UserModel.findByIdAndUpdate(user._id, { $inc: { 'uploadedFiles': 1 } }).exec();
+
         res.status(200).json({
             success: true,
             data: {
@@ -105,6 +126,7 @@ router.post('/', (req: express.Request, res: express.Response) => {
                 delete: `${config.hostname}/${filename}`
             }
         });
+
     } catch (err) {
         console.error(err);
         return res.status(500).json({
@@ -117,9 +139,70 @@ router.post('/', (req: express.Request, res: express.Response) => {
     }
 });
 
-router.delete('/delete', (req: express.Request, res: express.Response) => {
-    res.json({});
-    console.log('Deleting');
+router.delete('/delete', async(req: express.Request, res: express.Response) => {
+    if (!(req.body as object).hasOwnProperty('key') || !req.body.key || req.body.key == '') {
+        return res.status(401).json({
+            success: false,
+            data: {
+                message: 'You didn\'t provided token for authentication',
+                fix: 'Provide your private token or obtain it at https://discord.gg/3WrP5BUfcw'
+            }
+        });
+    }
+    
+    const user = await UserModel.findOne({ token: req.body.key }).exec();
+    const image = await ImageModel.findOne({ name: req.params.file }).exec();
+    
+    if (user === null) {
+        return res.status(403).json({
+            success: false,
+            data: {
+                message: 'Invalid token',
+                fix: 'This token does not have permissions to use this endpoint. You entered the wrong token, or you have been permanently banned from using our service'
+            }
+        });
+    }
+    
+    if (image === null) {
+        return res.status(404).json({
+            success: false,
+            data: {
+                message: 'Image not found',
+                fix: 'This image was not found on the server. It may be already deleted'
+            }
+        });
+    }
+    
+    if(user._id.toString() !== image.author.toString()) {
+        return res.status(403).json({
+            success: false,
+            data: {
+                message: 'You can\'t delete this file',
+                fix: 'Only the file owner and website admins can delete this file'
+            }
+        });
+    }
+    
+    try {
+        await ImageModel.findByIdAndDelete(image._id).exec();
+        await UserModel.findByIdAndUpdate(user._id, { $inc: { 'uploadedFiles': -1 } }).exec();
+
+        res.status(200).json({
+            success: true,
+            data: {
+                message: 'Successfully deleted'
+            }
+        })
+    } catch(err) {
+        console.error(err);
+        return res.status(500).json({
+            success: false,
+            data: {
+                message: 'Unexpected error',
+                fix: 'Bug has been reported to staff, please wait and try again'
+            }
+        });
+    }
 });
 
 export default router;
