@@ -4,11 +4,26 @@ import * as logSymbols from 'log-symbols';
 import * as path from 'path';
 import * as formData from 'express-form-data';
 import * as os from 'os';
+import * as mongoose from 'mongoose';
+import * as bodyParser from 'body-parser';
 import * as functions from './functions';
+import ImageModel from './models/image';
 import routes from './routes';
 
 const app = express();
 const config = functions.config();
+
+mongoose.connect(config.mongodb.host, {
+    useNewUrlParser: true,
+    user: config.mongodb.username,
+    pass: config.mongodb.password,
+    dbName: config.mongodb.database
+});
+const connection = mongoose.connection;
+
+connection.once('open', () => {
+    console.log(`${chalk.white.bgGreen(logSymbols.success)} Connected to database, using database name: ${chalk.cyan(config.mongodb.database)}`);
+});
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
@@ -18,6 +33,7 @@ app.use(formData.parse({
     uploadDir: os.tmpdir(),
     autoClean: true
 }));
+app.use(bodyParser.json());
 
 app.get('/', (req: express.Request, res: express.Response) => {
     res.render('index');
