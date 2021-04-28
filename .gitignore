@@ -1,5 +1,6 @@
 # Project-specific
 src/storage/*
+config.jsonc
 
 # Node
 node_modules/

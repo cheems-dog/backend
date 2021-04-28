@@ -3,5 +3,13 @@
     "port": 8081,
     
     // Name of the host you are running the script on, you can set it to domain or IP address
-    "hostname": "localhost:8081"
+    "hostname": "localhost:8081",
+
+    // Your MongoDB connection details, required for saving file and user data
+    "mongodb": {
+        "host": "mongodb://127.0.0.1:27017/",
+        "username": "admin",
+        "password": "",
+        "database": "cheemsdog",
+    }
 }
