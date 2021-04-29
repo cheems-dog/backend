@@ -1,5 +1,6 @@
 # Project-specific
-src/storage/*
+src/storage/avatars/*
+src/storage/uploaded/*
 config.jsonc
 
 # Node

@@ -13,7 +13,7 @@ const router = express.Router();
 router.get('/:file([a-zA-Z0-9\-\_]+(\.)(jpeg|jpg|png|gif|webm|mp4))', async (req: express.Request, res: express.Response) => {
     const filename = req.params['file'] + req.params['1'];
 
-    if (!fs.existsSync(path.join(__dirname, '../storage', filename))) return res.status(404);
+    if (!fs.existsSync(path.join(__dirname, '../storage/uploaded', filename))) return res.status(404);
 
     const file = await ImageModel.findOne({ name: filename }).exec();
     const author = await UserModel.findById(file.author).exec();

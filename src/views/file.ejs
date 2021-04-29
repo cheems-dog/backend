@@ -8,9 +8,9 @@
     <div class="container py-y my-5">
         <div class="text-center centered">
             <h1 class="anim-text-flow" style="font-weight: 800;"><%- file.name %></h1>
-            <img src="/static/storage/<%- file.name %>" alt="Image" />
+            <img src="/static/storage/uploaded/<%- file.name %>" alt="Image" />
             <br /><br />
-            <h4 class="mb-1" style="color: #7f8d94;">Uploaded by <img src="/api/users/avatar/<%- author._id %>.png" alt="Author image" width="40" height="40" /> <%- author.username %></h4><br>
+            <h4 class="mb-1" style="color: #7f8d94;">Uploaded by <img class="image avatar" src="/api/users/<%- author._id %>/avatar" alt="Author image" /> <%- author.username %></h4><br>
         </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>

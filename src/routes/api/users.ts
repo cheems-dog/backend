@@ -3,6 +3,8 @@ import * as mongoose from 'mongoose';
 import * as rateLimit from 'express-rate-limit';
 import * as bcrypt from 'bcrypt';
 import * as crypto from 'crypto';
+import * as path from 'path';
+import * as fs from 'fs';
 import { UserModel, User } from '../../models/user';
 
 const router = express.Router();
@@ -62,6 +64,35 @@ router.get('/:id', async (req: express.Request, res: express.Response) => {
     // ? Change database structure to not remove sensitive data on requests
     delete user['token'];
     res.status(200).json(user);
+});
+
+// * Get user avatar by ID
+router.get('/:id/avatar', async (req: express.Request, res: express.Response) => {
+    if (!mongoose.isValidObjectId(req.params.id)) {
+        return res.status(400).json({
+            error: {
+                code: 400,
+                title: 'Bad request',
+                message: 'Provided ID is not a valid ID'
+            }
+        });
+    }
+
+    const user = await UserModel.findById(req.params.id).exec();
+
+    if (user === null) {
+        return res.status(404).json({
+            error: {
+                code: 404,
+                title: 'Not found',
+                message: 'This user was not found, check the ID'
+            }
+        });
+    }
+
+    if(!fs.existsSync(path.join(__dirname, '../../storage/avatars/', user._id.toString(), '.png'))) return res.sendFile(path.join(__dirname, '../../static/images/unknown_user.png'));
+
+    res.sendFile(path.join(__dirname, '../../storage/avatars/', user._id.toString(), '.png'));
 });
 
 // * Updating user by ID, authentication thru header "Authorization"
