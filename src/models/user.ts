@@ -6,6 +6,7 @@ export interface User {
     email: string;
     token: string;
     uploadedFiles: number;
+    active: boolean;
 }
 
 export const UserSchema = new mongoose.Schema(
@@ -17,7 +18,8 @@ export const UserSchema = new mongoose.Schema(
         uploadedFiles: {
             type: Number,
             default: 0
-        }
+        },
+        active: Boolean
     },
     {
         collection: 'users'

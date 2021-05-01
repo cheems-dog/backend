@@ -169,34 +169,42 @@ router.post('/', rateLimit({
         }
     }
 } as any), async (req: express.Request, res: express.Response) => {
-    if (!isCreateUser(req.body)) {
-        return res.status(400).json({
-            error: {
-                code: 400,
-                title: 'Bad request',
-                message: 'Provided body was missing correct properties'
-            }
-        });
-    }
+    res.status(410).json({
+        error: {
+            code: 410,
+            title: 'Gone',
+            message: 'This route has been permanently removed'
+        }
+    })
 
-    const obj = req.body as any;
+    // if (!isCreateUser(req.body)) {
+    //     return res.status(400).json({
+    //         error: {
+    //             code: 400,
+    //             title: 'Bad request',
+    //             message: 'Provided body was missing correct properties'
+    //         }
+    //     });
+    // }
 
-    obj.password = await bcrypt.hash(req.body.password, await bcrypt.genSalt());
-    obj.token = crypto.randomBytes(32).toString('base64');
+    // const obj = req.body as any;
 
-    UserModel.create(obj).then(() => {
-        delete obj['password'];
-        res.status(200).json(obj);
-    }).catch((err) => {
-        res.status(500).json({
-            error: {
-                code: 500,
-                title: 'Internal server error',
-                message: 'There was unexpected error. Please report the following \'debug\' field to https://github.com/cheems-dog/backend/issues',
-                debug: err
-            }
-        });
-    });
+    // obj.password = await bcrypt.hash(req.body.password, await bcrypt.genSalt());
+    // obj.token = crypto.randomBytes(32).toString('base64');
+
+    // UserModel.create(obj).then(() => {
+    //     delete obj['password'];
+    //     res.status(200).json(obj);
+    // }).catch((err) => {
+    //     res.status(500).json({
+    //         error: {
+    //             code: 500,
+    //             title: 'Internal server error',
+    //             message: 'There was unexpected error. Please report the following \'debug\' field to https://github.com/cheems-dog/backend/issues',
+    //             debug: err
+    //         }
+    //     });
+    // });
 });
 
 export default router;

@@ -11,5 +11,13 @@
         "username": "admin",
         "password": "",
         "database": "cheemsdog",
+    },
+
+    // Mail configuration for registration, resetting passwords, etc.
+    "smtp": {
+        "host": "smtp.gmail.com",
+        "port": 587,
+        "username": "test@gmail.com",
+        "password": ""
     }
 }
