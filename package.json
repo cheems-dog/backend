@@ -9,6 +9,7 @@
         "audit": "npm audit"
     },
     "dependencies": {
+        "@sandervandriel/dir-size": "^1.3.1",
         "bcrypt": "^5.0.1",
         "chalk": "^4.1.0",
         "comment-json": "^4.1.0",
@@ -19,7 +20,9 @@
         "log-symbols": "^4.1.0",
         "mongoose": "^5.12.6",
         "multer": "^1.4.2",
-        "nodemailer": "^6.6.0"
+        "node-fetch": "^2.6.1",
+        "nodemailer": "^6.6.0",
+        "pretty-bytes": "^5.6.0"
     },
     "devDependencies": {
         "@types/bcrypt": "^3.0.1",
