@@ -5,6 +5,9 @@
     // Name of the host you are running the script on, you can set it to domain or IP address
     "hostname": "localhost:8081",
 
+    // Secret to encode passport login data
+    "loginSecret": "s3C4eT",
+
     // Your MongoDB connection details, required for saving file and user data
     "mongodb": {
         "host": "mongodb://127.0.0.1:27017/",
@@ -14,10 +17,28 @@
     },
 
     // Mail configuration for registration, resetting passwords, etc.
-    "smtp": {
-        "host": "smtp.gmail.com",
-        "port": 587,
-        "username": "test@gmail.com",
-        "password": ""
+    "mail": {
+        // SMTP server details
+        "smtp": {
+            "host": "smtp.example.com",
+            "secure": false,
+            "port": 587
+        },
+
+        // Account to send email from
+        "mailer": {
+            "username": "hello@example.com",
+            "password": "",
+            "from": "\"cheems.dog\" <hello@example.com>"
+        },
+
+        // Templates for mails
+        "mails": {
+            "register": {
+                "subject": "cheems.dog - Registration",
+                "html": true,
+                "body": "<h1>cheems.dog Registration</h1><p>Please confirm registration of your cheems.dog account by clicking {verificationUrl}</p>"
+            }
+        }
     }
 }

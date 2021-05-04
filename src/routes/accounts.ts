@@ -1,11 +1,10 @@
 import * as express from 'express';
-import * as fs from 'fs';
-import * as path from 'path';
-import * as mongoose from 'mongoose';
+import * as passport from 'passport';
 import * as bcrypt from 'bcrypt';
 import * as crypto from 'crypto';
 import * as nodemailer from 'nodemailer';
 import * as functions from '../functions';
+import * as passportHelpers from '../helpers/passport';
 import { UserModel } from '../models/user';
 import { VerificationModel } from '../models/verification';
 
@@ -36,7 +35,7 @@ router.get('/register', async (req: express.Request, res: express.Response) => {
 });
 
 router.post('/register', async (req: express.Request, res: express.Response) => {
-    if(req.body.password !== req.body.password2) {
+    if (req.body.password !== req.body.password2) {
         return res.render('register', {
             info: {
                 type: 'error',
@@ -44,7 +43,7 @@ router.post('/register', async (req: express.Request, res: express.Response) => 
             }
         });
     }
-    if(await UserModel.findOne({ username: req.body.username }).exec() !== null) {
+    if (await UserModel.findOne({ username: req.body.username }).exec() !== null) {
         return res.render('register', {
             info: {
                 type: 'error',
@@ -52,7 +51,7 @@ router.post('/register', async (req: express.Request, res: express.Response) => 
             }
         });
     }
-    if(await UserModel.findOne({ email: req.body.email }).exec() !== null) {
+    if (await UserModel.findOne({ email: req.body.email }).exec() !== null) {
         return res.render('register', {
             info: {
                 type: 'error',
@@ -60,7 +59,7 @@ router.post('/register', async (req: express.Request, res: express.Response) => 
             }
         });
     }
-    
+
     try {
         const transporter = nodemailer.createTransport({
             host: config.mail.smtp.host,
@@ -81,11 +80,11 @@ router.post('/register', async (req: express.Request, res: express.Response) => 
 
         const verificationId = createId(64);
 
-        if(config.mail.mails.register.html) (mailOptions as any).html = config.mail.mails.register.body.replaceAll('{verificationUrl}', `${config.hostname}/verify_account/${verificationId}`);
+        if (config.mail.mails.register.html) (mailOptions as any).html = config.mail.mails.register.body.replaceAll('{verificationUrl}', `${config.hostname}/verify_account/${verificationId}`);
         else (mailOptions as any).text = config.mail.mails.register.body.replaceAll('{verificationUrl}', `${config.hostname}/verify_account/${verificationId}`);
 
 
-        transporter.sendMail(mailOptions, async(error, info) => {
+        transporter.sendMail(mailOptions, async (error, info) => {
             if (error) {
                 res.render('register', {
                     info: {
@@ -95,9 +94,9 @@ router.post('/register', async (req: express.Request, res: express.Response) => 
                 });
                 return console.log(error);
             }
-            
+
             console.log('Message sent: %s', info);
-            
+
             const user = await UserModel.create({
                 username: req.body.username,
                 password: await bcrypt.hash(req.body.password, await bcrypt.genSalt()),
@@ -106,7 +105,7 @@ router.post('/register', async (req: express.Request, res: express.Response) => 
                 uploadedFiles: 0,
                 active: false
             });
-            
+
             await VerificationModel.create({
                 verificationId: verificationId,
                 type: 'create_account_verification',
@@ -121,42 +120,47 @@ router.post('/register', async (req: express.Request, res: express.Response) => 
             });
         });
 
-        
-    } catch(err) {}
+
+    } catch (err) { }
 });
 
-router.get('/login', async (req: express.Request, res: express.Response) => {
+router.get('/login', passportHelpers.forwardAuthenticated, async (req: express.Request, res: express.Response) => {
     res.render('login');
 });
 
-router.post('/login', async (req: express.Request, res: express.Response) => {
-    const user = await UserModel.findOne({ username: req.body.username });
+router.post('/login', async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    // const user = await UserModel.findOne({ username: req.body.username });
 
-    if(!user || !bcrypt.compareSync(req.body.password, user.password)) {
-        return res.render('login', {
-            info: {
-                type: 'error',
-                content: 'Incorrect username/password'
-            }
-        });
-    }
+    // if(!user || !bcrypt.compareSync(req.body.password, user.password)) {
+    //     return res.render('login', {
+    //         info: {
+    //             type: 'error',
+    //             content: 'Incorrect username/password'
+    //         }
+    //     });
+    // }
 
-    if(!user.active) {
-        return res.render('login', {
-            info: {
-                type: 'error',
-                content: 'This account wasn\'t activated yet, please check your mail'
-            }
-        });
-    }
+    // if(!user.active) {
+    //     return res.render('login', {
+    //         info: {
+    //             type: 'error',
+    //             content: 'This account wasn\'t activated yet, please check your mail'
+    //         }
+    //     });
+    // }
 
-    res.status(200).redirect('/dashboard');
+    // res.status(200).redirect('/dashboard');
+
+    passport.authenticate('local', {
+        successRedirect: '/dashboard',
+        failureRedirect: '/login'
+    })(req, res, next);
 });
 
 router.get('/verify_account/:verificationId', async (req: express.Request, res: express.Response) => {
     const verification = await VerificationModel.findOne({ verificationId: req.params.verificationId }).exec();
 
-    if(verification === null) {
+    if (verification === null) {
         return res.status(404).render('verify_account', {
             status: 404
         });
@@ -167,16 +171,21 @@ router.get('/verify_account/:verificationId', async (req: express.Request, res: 
             active: true
         }).exec();
         await VerificationModel.findByIdAndDelete(verification._id).exec();
-    
+
         res.render('verify_account', {
             status: 200
         });
-    } catch(err) {
+    } catch (err) {
         res.status(500).render('verify_account', {
             status: 500,
             err
         });
     }
 });
+
+router.get('/logout', (req: express.Request, res: express.Response) => {
+    req.logout();
+    res.redirect('/?message=logged_out')
+})
 
 export default router;

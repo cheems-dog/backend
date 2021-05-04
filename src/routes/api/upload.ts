@@ -109,7 +109,7 @@ router.post('/', async (req: express.Request, res: express.Response) => {
     try {
         const filename = createFileName(file);
 
-        fs.copyFileSync(file.path, path.join(__dirname, '../../storage/upload', filename));
+        fs.copyFileSync(file.path, path.join(__dirname, '../../storage/uploaded', filename));
 
         await ImageModel.create({
             name: filename,

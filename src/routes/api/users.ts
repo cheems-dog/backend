@@ -1,11 +1,11 @@
 import * as express from 'express';
 import * as mongoose from 'mongoose';
 import * as rateLimit from 'express-rate-limit';
-import * as bcrypt from 'bcrypt';
-import * as crypto from 'crypto';
+import * as prettifyBytes from 'pretty-bytes';
 import * as path from 'path';
 import * as fs from 'fs';
-import { UserModel, User } from '../../models/user';
+import { UserModel } from '../../models/user';
+import { ImageModel } from '../../models/image';
 
 const router = express.Router();
 
@@ -93,6 +93,50 @@ router.get('/:id/avatar', async (req: express.Request, res: express.Response) =>
     if(!fs.existsSync(path.join(__dirname, '../../storage/avatars/', user._id.toString(), '.png'))) return res.sendFile(path.join(__dirname, '../../static/images/unknown_user.png'));
 
     res.sendFile(path.join(__dirname, '../../storage/avatars/', user._id.toString(), '.png'));
+});
+
+// * Get user stats by ID
+router.get('/:id/stats', async (req: express.Request, res: express.Response) => {
+    if (!mongoose.isValidObjectId(req.params.id)) {
+        return res.status(400).json({
+            error: {
+                code: 400,
+                title: 'Bad request',
+                message: 'Provided ID is not a valid ID'
+            }
+        });
+    }
+
+    const user = await UserModel.findById(req.params.id).exec();
+
+    if (user === null) {
+        return res.status(404).json({
+            error: {
+                code: 404,
+                title: 'Not found',
+                message: 'This user was not found, check the ID'
+            }
+        });
+    }
+
+    const object: any = {};
+
+    object.uploaded = user.uploadedFiles;
+    object.size = 0;
+
+    const images = await ImageModel.find({
+        author: user._id
+    }).exec();
+
+    console.log(images);
+
+    images.forEach(image => {
+        object.size += fs.statSync(path.join(__dirname, `../../storage/uploaded//${image.name}`)).size;
+    });
+
+    object.prettySize = prettifyBytes(object.size);
+
+    res.json(object);
 });
 
 // * Updating user by ID, authentication thru header "Authorization"
