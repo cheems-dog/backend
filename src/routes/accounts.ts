@@ -156,7 +156,11 @@ router.post('/login', async (req: express.Request, res: express.Response) => {
 router.get('/verify_account/:verificationId', async (req: express.Request, res: express.Response) => {
     const verification = await VerificationModel.findOne({ verificationId: req.params.verificationId }).exec();
 
-    console.log(verification)
+    if(verification === null) {
+        return res.status(404).render('verify_account', {
+            status: 404
+        });
+    }
 
     try {
         await UserModel.findByIdAndUpdate(verification.owner, {
@@ -164,9 +168,14 @@ router.get('/verify_account/:verificationId', async (req: express.Request, res: 
         }).exec();
         await VerificationModel.findByIdAndDelete(verification._id).exec();
     
-        res.send('Account activated successfully, you can <a href="/login">now log in</a>');
+        res.render('verify_account', {
+            status: 200
+        });
     } catch(err) {
-        res.send(`Error occurred while activating your account, please report following message to <a href="https://github.com/cheems-dog/backend/issues">https://github.com/cheems-dog/backend/issues</a><br><br>${err}`)
+        res.status(500).render('verify_account', {
+            status: 500,
+            err
+        });
     }
 });
 

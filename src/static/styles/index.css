@@ -272,3 +272,10 @@ footer {
 .closebtn:hover {
     color: black;
 }
+
+code {
+    background-color: #2f3136;
+    border: 1px solid #000000;
+    border-radius: 10px;
+    padding: 20px;
+}
